@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CourseController extends Controller
 {
@@ -12,11 +14,14 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $courses = Course::latest()->paginate(10);
+
+
+
+        $courses = Course::latest()->where($request->except('page', 'limit', 'offset'))->paginate($request->input('limit', 10));
         return [
-            "status" => 1,
+            "status" => 200,
             "data" => $courses
         ];
     }
@@ -39,20 +44,15 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'teacher_id' => 'required',
-            'course_id' => 'required',
-            'name' => 'required',
-            'location_id' => 'required',
-            'term_id' => 'required',
-            'level' => 'required',
-        ]);
-
-        $course = Course::create($request->all());
-        return [
-            "status" => 1,
-            "data" => $course
-        ];
+        try {
+            $course = Course::create($request->all());
+            return response()->json(["status" => 200, "message" => "Course created successfully", "data" => $course], 201);
+        } catch (\Exception $e) {
+            return [
+                "status" => 0,
+                "message" => $e->getMessage()
+            ];
+        }
     }
 
     /**
@@ -61,12 +61,18 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function show(Course $course)
+    public function show(Course $course, Exception $exception)
     {
-        return [
-            "status" => 1,
-            "data" =>$course
-        ];
+        // if success return 200 else return 404
+        return $course
+            ? ["status" => 200, "data" => $course]
+            : ["status" => 404, "message" => "Course not found"];
+
+
+        // return [
+        //     "status" => 1,
+        //     "data" => $course
+        // ];
     }
 
     /**

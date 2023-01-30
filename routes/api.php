@@ -14,8 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('courses', CourseController::class);
-Route::resource('teachers', TeacherController::class);
-Route::resource('locations', LocationController::class);
-Route::resource('sessions', SessionController::class);
-Route::resource('university', UniversityController::class);
+Route::resources([
+    'courses' => CourseController::class,
+    'teachers' => TeacherController::class,
+    'locations' => LocationController::class,
+    'sessions' => SessionController::class,
+    'university' => UniversityController::class,
+]);
+Route::any('{path}', function() {
+    return response()->json([
+        'message' => 'Route not found'
+    ], 404);
+})->where('path', '.*');
