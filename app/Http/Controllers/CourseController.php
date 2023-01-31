@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CourseController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
@@ -29,7 +27,6 @@ class CourseController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -40,7 +37,6 @@ class CourseController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -59,27 +55,19 @@ class CourseController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Course  $course
-     * @return \Illuminate\Http\Response
      */
     public function show(Course $course, Exception $exception)
     {
-        // if success return 200 else return 404
-        return $course
-            ? ["status" => 200, "data" => $course]
-            : ["status" => 404, "message" => "Course not found"];
-
-
-        // return [
-        //     "status" => 1,
-        //     "data" => $course
-        // ];
+        return [
+            "status" => 200,
+            "data" => $course
+        ];
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Course  $course
-     * @return \Illuminate\Http\Response
      */
     public function edit(Course $course)
     {
@@ -91,18 +79,22 @@ class CourseController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Course  $course
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Course $course)
     {
-        //
+        $course->update($request->all());
+
+        return [
+            "status" => 200,
+            "data" => $course,
+            "msg" => "Blog updated successfully"
+        ];
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Course  $course
-     * @return \Illuminate\Http\Response
      */
     public function destroy(Course $course)
     {
