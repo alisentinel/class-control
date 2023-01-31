@@ -43,7 +43,7 @@ class CourseController extends Controller
         try {
             $course = Course::create($request->all());
             return response()->json(["status" => 200, "message" => "Course created successfully", "data" => $course], 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return [
                 "status" => 0,
                 "message" => $e->getMessage()
@@ -87,7 +87,7 @@ class CourseController extends Controller
         return [
             "status" => 200,
             "data" => $course,
-            "msg" => "Blog updated successfully"
+            "message" => "Course updated successfully"
         ];
     }
 
