@@ -14,7 +14,7 @@ class SanctumAuthController extends ApiController
     {
         $validate = Validator::make($request->all(),[
             'name' => 'required|string',
-            'username'=>'required|string|unique:users,username',
+           // 'username'=>'required|string|unique:users,username',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'confirm_password' => 'required|same:password',
@@ -42,6 +42,7 @@ class SanctumAuthController extends ApiController
             //'username' => 'required|username|exists:users,username',
             'email' => 'required|email|exists:users,email',
             'password' => 'required',
+            'captcha' => 'required|captcha'
         ]);
         if ($validate->fails()) {
             return $this->errorResponse('422',$validate->messages());
