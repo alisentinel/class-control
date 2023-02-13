@@ -42,7 +42,7 @@ class SanctumAuthController extends ApiController
             //'username' => 'required|username|exists:users,username',
             'email' => 'required|email|exists:users,email',
             'password' => 'required',
-            'captcha' => 'required|captcha'
+            // 'captcha' => 'required|captcha'
         ]);
         if ($validate->fails()) {
             return $this->errorResponse('422',$validate->messages());
