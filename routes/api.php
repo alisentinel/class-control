@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\sanctum\SanctumAuthController;
 use App\Http\Controllers\SessionController;
@@ -27,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
         'sessions' => SessionController::class,
         'universities' => UniversityController::class,
     ]);
+
+
+    // Route::post('upload', [ExcelController::class, 'import']);
 });
 
 Route::post('register', [SanctumAuthController::class, 'register']);

@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
+use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -54,6 +54,13 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ModelNotFoundException && $request->isJson()) {
             return response()->json(['status' => 404, 'message' => 'Record not found'], 404);
+        }
+
+        if ($exception instanceof \Symfony\Component\HttpFoundation\File\Exception\FileException) {
+            // create a validator and validate to throw a new ValidationException
+            return Validator::make($request->all(), [
+                'your_file_input' => 'required|file|size:100000',
+            ])->validate();
         }
 
         return parent::render($request, $exception);
