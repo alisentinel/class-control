@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'teachers' => TeacherController::class,
         'locations' => LocationController::class,
         'sessions' => SessionController::class,
-        'university' => UniversityController::class,
+        'universities' => UniversityController::class,
     ]);
 });
 
