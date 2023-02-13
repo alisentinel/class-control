@@ -29,8 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'universities' => UniversityController::class,
     ]);
 
-
-    // Route::post('upload', [ExcelController::class, 'import']);
+    Route::post('upload', [ExcelController::class, 'import']);
 });
 
 Route::post('register', [SanctumAuthController::class, 'register']);
