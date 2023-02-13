@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('university_id');
             $table->integer('floor');
             $table->integer('class_number');
+            $table->timestamps();
         });
     }
 

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->bigInteger('course_id');
             $table->integer('location_id');
             $table->text('time');
-            $table->string('status');
-            $table->text('comment');
+            $table->string('status')->nullable();
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }
