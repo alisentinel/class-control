@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\sanctum\SanctumAuthController;
 use App\Http\Controllers\SessionController;
@@ -25,11 +26,13 @@ Route::middleware('auth:sanctum')->group(function () {
         'teachers' => TeacherController::class,
         'locations' => LocationController::class,
         'sessions' => SessionController::class,
-        'university' => UniversityController::class,
+        'universities' => UniversityController::class,
     ]);
+
+    Route::post('upload', [ExcelController::class, 'upload']);
 });
 
-Route::post('register', [SanctumAuthController::class, 'register']);
+// Route::post('register', [SanctumAuthController::class, 'register']);
 Route::post('login', [SanctumAuthController::class, 'login']);
 Route::get('logout', [SanctumAuthController::class, 'logout'])->middleware('auth:sanctum');
 
