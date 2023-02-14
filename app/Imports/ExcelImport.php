@@ -13,11 +13,8 @@ class ExcelImport implements ToCollection
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            User::create([
-                'name' => $row[0],
-            ]);
 
-            Teacher::create([]);
+            // Teacher::create([]);
 
             // Get numbers in string
             $locationid = filter_var($row[22], FILTER_SANITIZE_NUMBER_INT);
