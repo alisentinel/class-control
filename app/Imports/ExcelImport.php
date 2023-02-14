@@ -24,7 +24,7 @@ class ExcelImport implements ToCollection
                 'course_id' => $row[0],
                 'name' => $row[2],
                 'location_id' => $locationid,
-                'times' => $row[71] + "-" + $row[72],
+                'times' => $row[71] . "-" . $row[72],
                 'teacher_id' => $row[9], // کد پرسنلی
                 'students_count' => $row[49],
                 'group' => $row[59],
