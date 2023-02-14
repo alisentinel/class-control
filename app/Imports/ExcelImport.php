@@ -19,10 +19,14 @@ class ExcelImport implements ToCollection
 
             Teacher::create([]);
 
+            // Get numbers in string
+            $locationid = filter_var($row[22], FILTER_SANITIZE_NUMBER_INT);
+
+
             Course::create([
                 'course_id' => $row[0],
                 'name' => $row[2],
-                'location_id' => $row[22],
+                'location_id' => $locationid,
                 'times' => $row[71] + "-" + $row[72],
                 'teacher_id' => $row[9], // کد پرسنلی
                 'students_count' => $row[49],
