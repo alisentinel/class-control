@@ -7,12 +7,18 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ExcelImport implements ToCollection
+class ExcelImport implements ToCollection, WithHeadingRow
 {
+
+
+
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
+
+
 
             // Teacher::create([]);
 
@@ -29,7 +35,8 @@ class ExcelImport implements ToCollection
                 'students_count' => $row[49],
                 'group' => $row[59],
                 'term_id' => $row[54],
-                'status' => 'enabled'
+                'status' => 'enabled',
+                'level' => $row[63]
             ]);
         }
     }
