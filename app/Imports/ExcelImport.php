@@ -23,6 +23,7 @@ class ExcelImport implements ToCollection, WithHeadingRow
             // Teacher::create([]);
 
             // Get numbers in string
+            dd($row[22]);
             $locationid = filter_var($row[22], FILTER_SANITIZE_NUMBER_INT);
 
 
