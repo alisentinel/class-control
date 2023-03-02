@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('national_code')->unique();
             $table->string('name');
-            $table->string('last_name');
-            $table->string('phone')->unique();
+            // $table->string('last_name');
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }

@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('teacher_id');
-            $table->bigInteger('course_id')->unique();
+            $table->bigInteger('teacher_id')->nullable();
+            $table->bigInteger('course_id');
             $table->string('name');
             $table->integer('location_id');
             $table->text('times');

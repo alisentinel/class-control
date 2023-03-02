@@ -4,7 +4,6 @@ namespace App\Imports;
 
 use App\Models\Course;
 use App\Models\Teacher;
-use App\Models\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -18,27 +17,50 @@ class ExcelImport implements ToCollection, WithHeadingRow
     {
         foreach ($rows as $row) {
 
+            // Check if teacher informations filled then try to import it to DB
+            if (
+                !empty($row['kd_mly']) &&
+                is_int($row['kd_mly']) &&
+                !empty($row['nam_khanoadgy'])
+            ) {
+                // Check if teacher isn't already imported
+                if (!Teacher::where('national_code', $row['kd_mly'])->first()) {
+                    $mobile = is_int($row['mobile']) ? $row['mobile'] : null;
+                    try {
+                        // Insert teacher to DB
+                        Teacher::create([
+                            'national_code' => $row['kd_mly'],
+                            'name' => $row['nam_khanoadgy'],
+                            'phone' => $mobile
+                        ]);
+                    } catch (\Exception $e) {
+                        print($e->getMessage());
+                    }
+                }
+            }
+
+            $locationid = filter_var($row['nam_mkan'], FILTER_SANITIZE_NUMBER_INT) or 0;
+            $locationid = (is_int($locationid)) ? $locationid : 0;
+
+            $teacher = (!empty($row['kd_mly']) && is_int($row['kd_mly'])) ? Teacher::where('national_code', $row['kd_mly'])->first(['id'])->id : null;
 
 
-            // Teacher::create([]);
-
-            // Get numbers in string
-            dd($row[22]);
-            $locationid = filter_var($row[22], FILTER_SANITIZE_NUMBER_INT);
-
-
-            Course::create([
-                'course_id' => $row[0],
-                'name' => $row[2],
-                'location_id' => $locationid,
-                'times' => $row[71] . "-" . $row[72],
-                'teacher_id' => $row[9], // کد پرسنلی
-                'students_count' => $row[49],
-                'group' => $row[59],
-                'term_id' => $row[54],
-                'status' => 'enabled',
-                'level' => $row[63]
-            ]);
+            try {
+                Course::create([
+                    'course_id' => $row['kd_drs'],
+                    'teacher_id' => $teacher, # if it's null, make teacher unknown
+                    'location_id' => $locationid,
+                    'times' =>  $row['azsaaat'] . "-" . $row['ta_saaat'],
+                    'name' => $row['nam_drs'],
+                    'students_count' => $row['taadad_thbt_namy'],
+                    'term_id' => $row['kd_nymsal'],
+                    'group' => $row['groh'],
+                    'level' => $row['mktaa'],
+                    'status' => 'enabled'
+                ]);
+            } catch (\Exception $e) {
+                print($e->getMessage());
+            }
         }
     }
 }
