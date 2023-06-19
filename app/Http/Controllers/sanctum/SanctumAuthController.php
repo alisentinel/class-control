@@ -47,7 +47,13 @@ class SanctumAuthController extends ApiController
         if ($validate->fails()) {
             return $this->errorResponse('422',$validate->messages());
         }
+
+
         $user = User::query()->where('email',$request->email)->first();
+
+        if ($user->role === 'blocked') {
+            return $this->errorResponse('403','Login is disabled for you, please contact the administrator');
+        }
         if (!Hash::check($request->password,$user->password)) {
             return $this->errorResponse('422','password is incorrect');
         }

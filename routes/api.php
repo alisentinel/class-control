@@ -7,6 +7,7 @@ use App\Http\Controllers\sanctum\SanctumAuthController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UniversityController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,10 +28,18 @@ Route::middleware('auth:sanctum')->group(function () {
         'locations' => LocationController::class,
         'sessions' => SessionController::class,
         'universities' => UniversityController::class,
+        // 'users' => UserController::class,
     ]);
 
     Route::post('upload', [ExcelController::class, 'import']);
 });
+
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::resources([
+        'users' => UserController::class,
+    ]);
+});
+
 
 Route::post('register', [SanctumAuthController::class, 'register']);
 Route::post('login', [SanctumAuthController::class, 'login']);
