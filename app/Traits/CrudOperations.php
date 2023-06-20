@@ -15,12 +15,20 @@ trait CrudOperations
     {
         $model = $this->getModelInstance();
 
-        $items = $model::latest()->where($request->except('page', 'limit', 'offset'))->paginate($request->input('limit', 10));
+        $search = $request->input('search');
 
-        return [
-            "status" => 200,
-            "data" => $items
-        ];
+        // Check if search is true search in database using like otherwise search for exact value
+        if($search) {
+            foreach($request->except('page', 'limit', 'offset', 'search') as $key => $value) {
+                $items[] = $model::latest()->where($key, 'like', '%' . $value . '%')->paginate($request->input('limit', 10));
+            }
+        } else {
+            $items = $model::latest()->where($request->except('page', 'limit', 'offset', 'search'))->paginate($request->input('limit', 10));
+        }
+
+        $code = empty($items['data']) ? 404 : 200;
+
+        return $this->returnResponse($code, $items);
     }
 
     /**
@@ -44,10 +52,10 @@ trait CrudOperations
 
             $item = $model::create($request->all());
 
-            return response()->json(["status" => 200, "message" => $this->getModelName() . " created successfully", "data" => $item], 201);
+            return $this->returnResponse(201, $item, $this->getModelName() . " created successfully");
         } catch (Exception $e) {
             return [
-                "status" => 0,
+                "status" => 400,
                 "message" => $e->getMessage()
             ];
         }
@@ -64,10 +72,7 @@ trait CrudOperations
 
         $item = $model::findOrFail($id);
 
-        return [
-            "status" => 200,
-            "data" => $item
-        ];
+        return $this->returnResponse(200, $item);
     }
 
     /**
@@ -94,11 +99,8 @@ trait CrudOperations
 
         $item->update($request->all());
 
-        return [
-            "status" => 200,
-            "data" => $item,
-            "message" => $this->getModelName() . " updated successfully"
-        ];
+        return $this->returnResponse(200, $item, $this->getModelName() . " updated successfully"
+        );
     }
 
     /**
@@ -114,10 +116,15 @@ trait CrudOperations
 
         $item->delete();
 
-        return [
-            "status" => 200,
-            "message" => $this->getModelName() . " deleted successfully"
-        ];
+        return $this->returnResponse(200, null, $this->getModelName() . " deleted successfully");
+
+    }
+
+    private function returnResponse($code, $data = null, $message = null)
+    {
+        return response()->json(
+            ['status' => $code, 'data' => $data, 'message' => $message],
+            $code);
     }
 
     /**
