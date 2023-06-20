@@ -20,13 +20,15 @@ trait CrudOperations
         // Check if search is true search in database using like otherwise search for exact value
         if($search) {
             foreach($request->except('page', 'limit', 'offset', 'search') as $key => $value) {
-                $items[] = $model::latest()->where($key, 'like', '%' . $value . '%')->paginate($request->input('limit', 10));
+                $items = $model::latest()->where($key, 'like', '%' . $value . '%')->paginate($request->input('limit', 10));
             }
         } else {
             $items = $model::latest()->where($request->except('page', 'limit', 'offset', 'search'))->paginate($request->input('limit', 10));
         }
 
-        $code = empty($items['data']) ? 404 : 200;
+        // dd($items);
+
+        $code = $items->isEmpty() ? 404 : 200;
 
         return $this->returnResponse($code, $items);
     }
