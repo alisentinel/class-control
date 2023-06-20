@@ -8,6 +8,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,6 +33,17 @@ Route::middleware('auth:sanctum')->group(function () {
     ]);
 
     Route::post('upload', [ExcelController::class, 'import']);
+
+    Route::delete('resetDB', function() {
+        // \Illuminate\Support\Facades\Artisan::call('migrate:refresh --seed');
+        $tables = ['courses', 'locations', 'sessions', 'teachers', 'universities'];
+        foreach($tables as $table) {
+            DB::table($table)->truncate();
+        }
+        return response()->json([
+            'message' => 'Database reseted'
+        ], 200);
+    });
 });
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
